@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AES Encryption</title>
+    <style>
+        body { font-family: Georgia, sans-serif; text-align: center; padding: 20px; }
+        input, textarea { width: 80%; padding: 10px; margin: 10px; }
+        button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>AES Encryption & Decryption</h2>
+
+    <input type="text" id="text" placeholder="Enter text">
+    <button onclick="encrypt()">Encrypt</button>
+    <button onclick="decrypt()">Decrypt</button>
+
+    <h3>Output:</h3>
+    <textarea id="output" rows="4" readonly></textarea>
+
+    <script>
+        async function encrypt() {
+            let text = document.getElementById("text").value;
+            if (!text) return alert("Enter text to encrypt!");
+
+            let response = await fetch("/encrypt", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text })
+            });
+
+            let data = await response.json();
+            document.getElementById("output").value = data.encrypted;
+        }
+
+        async function decrypt() {
+            let text = document.getElementById("output").value;
+            if (!text) return alert("Enter encrypted text!");
+
+            let response = await fetch("/decrypt", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text })
+            });
+
+            let data = await response.json();
+            document.getElementById("text").value = data.decrypted;
+        }
+    </script>
+
+</body>
+</html>
